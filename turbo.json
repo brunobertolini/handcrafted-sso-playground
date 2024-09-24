@@ -5,7 +5,17 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "AUTH_IDP_HOST",
+        "AUTH_IDP_ID",
+        "AUTH_IDP_SECRET",
+        "AUTH_SECRET",
+        "AUTH_TRUST_HOST",
+        "AUTH_REDIRECT_PROXY_URL",
+        "DATABASE_URL",
+        "DATABASE_URL_DIRECT"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
