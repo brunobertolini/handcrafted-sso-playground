@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { decode } from 'next-auth/jwt'
 
-import { prisma } from '../../../../prisma'
+import { prisma } from '../../../prisma'
 
 export async function GET(req) {
   const authorizationHeader = req.headers.get('authorization')
