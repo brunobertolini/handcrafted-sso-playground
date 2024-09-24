@@ -26,3 +26,21 @@ model User {
 
   @@map("users")
 }
+
+//  OAuth Sessions, not auth sessions
+model Sessions {
+  id                  String  @id @default(cuid())
+  userId              String  @map("user_id")
+  clientId            String  @map("client_id")
+  redirectUri         String  @map("redirect_uri")
+  codeChallenge       String  @map("code_challenge")
+  codeChallengeMethod String  @map("code_challenge_method")
+  authorizationCode   String  @map("authorization_code")
+  scope               String?
+  expiresAt           Int     @map("expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sessions")
+}
