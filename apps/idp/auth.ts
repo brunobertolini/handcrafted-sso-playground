@@ -1,4 +1,5 @@
-import NextAuth from "next-auth"
+import NextAuth, { Session } from 'next-auth'
+import { JWT } from 'next-auth/jwt'
 import Credentials from "next-auth/providers/credentials"
 import hash from 'hash.js';
 
@@ -11,6 +12,15 @@ export function hashPassword(password) {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  callbacks: {
+    session: async ({ session, token }: { session: Session; token: JWT }) => {
+      if (token?.sub && session?.user) {
+        session.user.id = token.sub
+      }
+
+      return session
+    }
+  },
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
