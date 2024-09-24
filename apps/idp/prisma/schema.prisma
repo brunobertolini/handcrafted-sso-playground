@@ -28,7 +28,7 @@ model User {
 }
 
 //  OAuth Sessions, not auth sessions
-model Sessions {
+model Session {
   id                  String  @id @default(cuid())
   userId              String  @map("user_id")
   clientId            String  @map("client_id")
