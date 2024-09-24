@@ -8,11 +8,12 @@ export const signIn = async (prevState, formData) => {
     email: `${formData.get('email')?.trim()}`.toLocaleLowerCase(),
     password: formData.get('password')?.trim(),
   }
+  const redirectTo = formData.get('callbackUrl') || '/'
 
   try {
     await authSignIn('credentials', {
       ...data,
-      redirectTo: '/'
+      redirectTo,
     })
   } catch (error) {
     if (isRedirectError(error)) {

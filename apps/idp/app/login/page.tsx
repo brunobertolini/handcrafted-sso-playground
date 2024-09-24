@@ -5,11 +5,13 @@ import styles from "./page.module.css";
 
 import { signIn } from './action'
 
-const FormContent = () => {
+const FormContent = ({ formState }) => {
   const { pending } = useFormStatus()
 
   return (
     <>
+      <input type="hidden" name="callbackUrl" value={formState?.callbackUrl} />
+
       <label htmlFor='email'>Email</label>
       <input
         className={styles.input}
@@ -41,8 +43,10 @@ const FormContent = () => {
   )
 }
 
-export default function Home() {
-  const [formState, formAction] = useFormState(signIn, {})
+export default function Home({ searchParams }) {
+  const [formState, formAction] = useFormState(signIn, {
+    callbackUrl: searchParams.callbackUrl
+  })
 
   return (
     <div className={styles.page}>
