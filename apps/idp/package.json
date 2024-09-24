@@ -9,7 +9,7 @@
     "postbuild": "yarn prisma migrate deploy",
     "start": "next start",
     "lint": "next lint",
-    "prelocal": "yarn prisma generate",
+    "prelocal": "yarn prisma migrate deploy && yarn prisma generate",
     "local": "yarn dev -p 80"
   },
   "dependencies": {

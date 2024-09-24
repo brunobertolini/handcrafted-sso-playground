@@ -1,8 +1,19 @@
 import { NextResponse } from 'next/server'
 import { encode } from 'next-auth/jwt'
-import hash from 'hash.js'
 
 import { prisma } from '../../../prisma'
+
+function base64UrlEncode(arrayBuffer) {
+  const base64String = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+  return base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function generateCodeChallenge(codeVerifier) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(codeVerifier);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return base64UrlEncode(hashBuffer);
+}
 
 export async function POST(request) {
   const body = await request.text()
@@ -39,7 +50,7 @@ export async function POST(request) {
     }, { status: 400 })
   }
 
-  const calculatedCodeChallenge = hash.sha256().update(codeVerifier).digest('hex')
+  const calculatedCodeChallenge = await generateCodeChallenge(codeVerifier)
 
   if (!calculatedCodeChallenge) {
     return NextResponse.json({
@@ -62,7 +73,7 @@ export async function POST(request) {
     },
     maxAge: 3600, // 1h
     secret: `${process.env.AUTH_SECRET}`,
-    salt: '',
+    salt: 'SALT',
   })
 
   const refreshToken = await encode({
@@ -72,7 +83,7 @@ export async function POST(request) {
     },
     maxAge: 3600 * 60,
     secret: `${process.env.AUTH_SECRET}`,
-    salt: '',
+    salt: 'SALT',
   })
 
   return NextResponse.json({

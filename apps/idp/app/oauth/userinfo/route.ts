@@ -15,12 +15,16 @@ export async function GET(req) {
     const decoded = await decode({
       token,
       secret: `${process.env.AUTH_SECRET}`,
-      salt: '',
+      salt: 'SALT',
     })
-
     const user = await prisma.user.findUnique({
       where: {
         id: decoded.sub
+      },
+      select: {
+        name: true,
+        email: true,
+        emailVerified: true,
       }
     })
 

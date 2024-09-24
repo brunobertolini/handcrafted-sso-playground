@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prelocal": "yarn prisma generate",
     "local": "yarn dev -p 80"
   },
   "dependencies": {
