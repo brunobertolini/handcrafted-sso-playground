@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { encode } from 'next-auth/jwt'
 import hash from 'hash.js'
 
-import { prisma } from '../../../prisma'
+import { prisma } from '../../../../prisma'
 
 export async function POST(request) {
   const body = await request.text()

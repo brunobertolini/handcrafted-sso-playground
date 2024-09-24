@@ -1,81 +1,21 @@
-# Turborepo starter
+# Handcrafted Identiry Provider (IDP) SSO Playground
 
-This is an official starter Turborepo.
+Just playing a bit around with handcrafted IDP SSO to learn about the OAuth flow.
 
-## Using this example
+I'm exploring, so do not consider this project as a real one, and I'm not concerned about good pratices, layout design, software architeture...
+This is far to be considered a production-ready one.
 
-Run the following command:
+## How to run
 
-```sh
-npx create-turbo@latest
-```
+This project was made with NextJS and Turborepo, composed by 2 apps: IDP and Client.
+- IDP handle all about auth and o auth flow
+- Client just consume auth from IDP, like and SSO
 
-## What's inside?
+If you run `yarn dev`, both project are up on localhost, in differente ports.
+So, to run locally you need do with docker, because IDP uses cookie based auth, and cookies are isolated by domain (localhost), not by port.
 
-This Turborepo includes the following packages/apps:
+Docker compose are present, just up.
 
-### Apps and Packages
+### Env vars
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+We have a env file per project, and a root .env file to run containers. Setup this files before run docker.
