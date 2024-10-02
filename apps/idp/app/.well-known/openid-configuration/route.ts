@@ -5,8 +5,8 @@ export async function GET(req) {
 
   return NextResponse.json({
     issuer: baseUrl,
-    authorization_endpoint: `${baseUrl}/api/oauth/authorize`,
-    token_endpoint: `${baseUrl}/api/oauth/token`,
-    userinfo_endpoint: `${baseUrl}/api/oauth/userinfo`,
+    authorization_endpoint: `${baseUrl}/oauth/authorize`,
+    token_endpoint: `${baseUrl}/oauth/token`,
+    userinfo_endpoint: `${baseUrl}/oauth/userinfo`,
   })
 }
