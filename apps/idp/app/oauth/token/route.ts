@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
-import { encode } from 'next-auth/jwt'
+import { NextRequest, NextResponse } from 'next/server'
+import { decode, encode } from 'next-auth/jwt'
 
 import { prisma } from '../../../prisma'
 
@@ -15,20 +15,12 @@ async function generateCodeChallenge(codeVerifier) {
   return base64UrlEncode(hashBuffer);
 }
 
-export async function POST(request) {
+const authorizationCode = async (request) => {
   const body = await request.text()
   const params = new URLSearchParams(body)
 
   const code = params.get('code')
   const codeVerifier = params.get('code_verifier')
-  const grantType = params.get('grant_type')
-
-  if (grantType !== 'authorization_code') {
-    return NextResponse.json({
-      error: 'unsupported_grant_type',
-      error_description: 'The authorization grant type is not supported by the server.',
-    }, { status: 400 })
-  }
 
   // Verificar se o código de autorização existe e é válido
   const oauthSession = await prisma.session.findFirst({
@@ -92,4 +84,67 @@ export async function POST(request) {
     expires_in: 3600,
     refresh_token: refreshToken,
   })
+}
+
+const refreshToken = async (request) => {
+  const body = await request.text()
+  const params = new URLSearchParams(body)
+
+  const token = params.get('refresh_token')
+
+  const decoded = await decode({
+    token,
+    secret: `${process.env.AUTH_SECRET}`,
+    salt: 'SALT',
+  })
+
+  if (!decoded) {
+    return NextResponse.json({
+      error: 'invalid_grant',
+      error_description: 'The provided refresh token is invalid or expired.'
+    }, { status: 400 });
+  }
+
+  const accessToken = await encode({
+    token: {
+      sub: decoded.userId,
+      aud: decoded.clientId,
+    },
+    maxAge: 3600, // 1h
+    secret: `${process.env.AUTH_SECRET}`,
+    salt: 'SALT',
+  })
+
+  const refreshToken = await encode({
+    token: {
+      sub: decoded.userId,
+      aud: decoded.clientId,
+    },
+    maxAge: 3600 * 60,
+    secret: `${process.env.AUTH_SECRET}`,
+    salt: 'SALT',
+  })
+
+  return NextResponse.json({
+    access_token: accessToken,
+    token_type: 'Bearer',
+    expires_in: 3600,
+    refresh_token: refreshToken,
+  })
+}
+
+export const POST = async (request: NextRequest) => {
+  const body = await request.text()
+  const params = new URLSearchParams(body)
+
+  const grantType = params.get('grant_type')
+
+  if (grantType !== 'authorization_code' && grantType !== 'refresh_token') {
+    return NextResponse.json({
+      error: 'unsupported_grant_type',
+      error_description: 'The authorization grant type is not supported by the server.',
+    }, { status: 400 })
+  }
+
+  return grantType === 'authorization_code' ? authorizationCode(request) : refreshToken(request)
 }
