@@ -10,6 +10,7 @@ export async function GET(req) {
     issuer: baseUrl,
     authorization_endpoint: `${baseUrl}/oauth/authorize`,
     token_endpoint: `${baseUrl}/oauth/token`,
+    refresh_token_endpoint: `${baseUrl}/oauth/token`,
     userinfo_endpoint: `${baseUrl}/oauth/userinfo`,
     end_session_endpoint: `${baseUrl}/logout`
   })
