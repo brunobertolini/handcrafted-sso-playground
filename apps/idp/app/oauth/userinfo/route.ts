@@ -22,6 +22,7 @@ export async function GET(req) {
         id: decoded.sub
       },
       select: {
+        id: true,
         name: true,
         email: true,
         emailVerified: true,
